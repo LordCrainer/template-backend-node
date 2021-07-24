@@ -1,6 +1,13 @@
-import { Stream } from "stream";
 import winston from "winston";
 import * as winstonDaily from "winston-daily-rotate-file";
+
+const levels = {
+  error: 0,
+  warn: 1,
+  info: 2,
+  http: 3,
+  debug: 4,
+};
 
 const colors = {
   error: "red",
@@ -9,19 +16,50 @@ const colors = {
   http: "magenta",
   debug: "white",
 };
-
+const level = () => {
+  const env = process.env.NODE_ENV || "development";
+  const isDevelopment = env === "development";
+  return isDevelopment ? "debug" : "warn";
+};
 winston.addColors(colors);
+
+const format = winston.format.combine(
+  winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss:ms" }),
+  winston.format.colorize({ all: true }),
+  winston.format.printf(
+    (info) => `${info.timestamp} ${info.level}: ${info.message}`
+  )
+);
+
+const transports = [
+  new winston.transports.Console(),
+  new winston.transports.File({
+    filename: "logs/error.log",
+    level: "error",
+  }),
+  new winston.transports.File({ filename: "logs/all.log" }),
+];
+
+const Logger = winston.createLogger({
+  level: level(),
+  levels,
+  format,
+  transports,
+});
+
+export default Logger;
+
 /**
  * Transport to logger
  * @type {DailyRotateFile}
  */
-const transport = new winston.transports.DailyRotateFile({
+/* const transport = new winston.transports.DailyRotateFile({
   filename: `${__dirname}/../logs/application-%DATE%.log`,
   datePattern: "DD-MM-YYYY",
   zippedArchive: false,
   maxSize: "20m",
   maxFiles: "30d",
-});
+}); */
 
 /**
  * Set timezone to logger
@@ -38,7 +76,7 @@ const timezoned = () =>
  * file: {filename: string, handleExceptions: boolean, level: string, json: boolean,
  * maxsize: number, maxFiles: number}}}
  */
-const options = {
+/* const options = {
   file: {
     level: "info",
     filename: `${__dirname}/../logs/app.log`,
@@ -53,13 +91,13 @@ const options = {
     json: false,
     colorize: true,
   },
-};
+}; */
 
 /**
  * Logger object with above defined options
  * @type {winston.Logger}
  */
-const logger = winston.createLogger({
+/* const logger = winston.createLogger({
   transports: [
     new winston.transports.File(options.file),
     new winston.transports.Console(options.console),
@@ -76,31 +114,31 @@ const logger = winston.createLogger({
     )
   ),
   exitOnError: false,
-});
+}); */
 
-const stream = {
+/* const stream = {
   write(message: string) {
     logger.info(
       message.replace(/(\r\n|\n|\r)/gm, "").replace(/ *\[[^\]]*]/, "")
     );
   },
-};
+}; */
 
 /**
  * Writing file
  * @type {{write(*): void}}
  */
-logger.stream = () => new Stream.Duplex(stream);
-
+/* logger.stream = () => new Stream.Duplex(stream);
+ */
 /**
  * Logger
  * @param message Message to save log
  */
-const i = (message: string) => {
+/* const i = (message: string) => {
   logger.stream();
-};
+}; */
 
-export = {
+/* export = {
   logger,
   i,
-};
+}; */
