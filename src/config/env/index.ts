@@ -1,10 +1,4 @@
-import { CorsOptions } from "cors";
 import dotenv from "dotenv";
-const envFound = dotenv.config();
-if (envFound.error) {
-  // This error should crash whole process
-  throw new Error("⚠️  Couldn't find .env file  ⚠️");
-}
 
 import { DefineType, IEnvType } from "./env.type";
 import production from "./production";
@@ -16,6 +10,9 @@ const enviroment: DefineType<IEnvType> = {
 };
 
 const { NODE_ENV } = process.env;
+
+const envFound = dotenv.config({path: `.env.${NODE_ENV}`});
+if (envFound.error) throw new Error("⚠️  Couldn't find .env file  ⚠️");
 const env = NODE_ENV || "development";
 
 const currentEnv = enviroment[env];
