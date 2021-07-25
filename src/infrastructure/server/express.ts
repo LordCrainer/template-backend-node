@@ -10,7 +10,7 @@ import apiRouter from "../../adapter/routes";
 
 import helmet from "helmet";
 import morganMiddleware from "./../middleware/morgan";
-import { IEnvConfig } from "./../../config/env/env.type";
+import { IEnvConfig } from "../config/env.type";
 
 const appServer = (config: IEnvConfig) => {
   // APP PORT

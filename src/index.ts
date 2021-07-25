@@ -1,6 +1,6 @@
 import Logger from "./infrastructure/lib/logger";
 import app from "./infrastructure/server/express";
-import config from "./config/env/index";
+import config from "./infrastructure/config/index";
 
 const { server } = config;
 
