@@ -5,11 +5,12 @@ import Logger from "./../infrastructure/lib/logger";
 
 const result = (
   res: Response,
-  data: object,
   status: number = 200,
+  message: string | Object,
   cookie?: any
 ): void => {
-  res.status(status).json({ data, success: true });
+  res.status(status).json({ message, success: true });
+  Logger.debug(message);
 };
 const error = (
   res: Response,
@@ -19,9 +20,9 @@ const error = (
   },
   override?: IOverrideRequest
 ): void => {
-  Logger.error(error);
-  console.log(error);
-  res.status(status).json({ error, success: false, override });
+  const data = { error, success: false, override };
+  res.status(status).json(data);
+  Logger.error(JSON.stringify(data));
 };
 
 export default {

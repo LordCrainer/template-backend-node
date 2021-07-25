@@ -25,8 +25,8 @@ const appServer = (config: IEnvConfig) => {
   app.use(helmet());
   app.use(morganMiddleware);
   app.use("*", (req, res, next) => {
-    apiResponse.error(res, 404, { message: "Page not found!!" });
-    // res.status(404).send({ apiResponse: "API SERVICE: NOT FOUND PATH!!" });
+    const message = "Route not found !!";
+    apiResponse.error(res, 404, { message });
   });
   return app;
 };
