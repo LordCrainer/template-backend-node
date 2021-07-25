@@ -1,17 +1,17 @@
 import dotenv from "dotenv";
 
-import { DefineType, IEnvType } from "./env.type";
+import { IEnviroment, IEnvType } from "./env.type";
 import production from "./production";
 import development from "./development";
 
-const enviroment: DefineType<IEnvType> = {
+const enviroment: IEnviroment = {
   development,
   production,
 };
 
 const { NODE_ENV } = process.env;
 
-const envFound = dotenv.config({path: `.env.${NODE_ENV}`});
+const envFound = dotenv.config({ path: `.env.${NODE_ENV}` });
 if (envFound.error) throw new Error("⚠️  Couldn't find .env file  ⚠️");
 const env = NODE_ENV || "development";
 

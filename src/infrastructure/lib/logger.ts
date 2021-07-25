@@ -1,5 +1,3 @@
-
-
 import winston from "winston";
 import * as winstonDaily from "winston-daily-rotate-file";
 
@@ -32,14 +30,51 @@ const format = winston.format.combine(
     (info) => `${info.timestamp} ${info.level}: ${info.message}`
   )
 );
+const options = {
+  file: {
+    info: {
+      level: "info",
+      filename: `${__dirname}/../../../logs/app.log`,
+      handleExceptions: true,
+      json: true,
+      maxsize: 5242880, // 5MB
+      maxFiles: 1,
+    },
+    error: {
+      filename: `${__dirname}/../../../logs/error.log`,
+      level: "error",
+    },
+  },
+  console: {
+    level: "debug",
+    handleExceptions: true,
+    json: false,
+    colorize: true,
+  },
+};
 
+/* const logger = winston.createLogger({
+  transports: [
+    new winston.transports.File(options.file),
+    new winston.transports.Console(options.console),
+    transport,
+  ],
+  format: winston.format.combine(
+    winston.format.simple(),
+    winston.format.colorize(),
+    winston.format.timestamp({
+      format: timezoned,
+    }),
+    winston.format.printf(
+      (info) => `[${info.timestamp}] ${info.level}: ${info.message}`
+    )
+  ),
+  exitOnError: false,
+}); */
 const transports = [
-  new winston.transports.Console(),
-  new winston.transports.File({
-    filename: "logs/error.log",
-    level: "error",
-  }),
-  new winston.transports.File({ filename: "logs/all.log" }),
+  new winston.transports.Console(options.console),
+  new winston.transports.File(options.file.info),
+  new winston.transports.File(options.file.error),
 ];
 
 const Logger = winston.createLogger({

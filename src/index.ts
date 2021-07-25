@@ -1,9 +1,9 @@
 import Logger from "./infrastructure/lib/logger";
 import app from "./infrastructure/server/express";
-import currentEnv from "./config/env/index";
+import config from "./config/env/index";
 
-const { server } = currentEnv;
+const { server } = config;
 
-app.listen(app.get("port"), () =>
+app(config).listen(server.port, () =>
   Logger.info(`http://${server.host}:${server.port}`)
 );

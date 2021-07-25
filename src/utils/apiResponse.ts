@@ -1,6 +1,7 @@
 import { IOverrideRequest } from "../Types/utils/IapiResponse";
 import { Response } from "express";
 import httpStatusCodes from "http-status-codes";
+import Logger from "./../infrastructure/lib/logger";
 
 const result = (
   res: Response,
@@ -18,6 +19,8 @@ const error = (
   },
   override?: IOverrideRequest
 ): void => {
+  Logger.error(error);
+  console.log(error);
   res.status(status).json({ error, success: false, override });
 };
 
