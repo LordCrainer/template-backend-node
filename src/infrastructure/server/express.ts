@@ -1,25 +1,29 @@
 import express from "express";
-const app = express();
-import http from "http";
-import mongoose from "mongoose";
-import cors from "cors";
-import Logger from "../lib/logger";
-// import fileUpload from 'express-fileupload'
-import apiResponse from "../../utils/apiResponse";
+import * as Middleware from "../middleware/middleware";
 import apiRouter from "../../adapter/routes";
-
-import helmet from "helmet";
-import morganMiddleware from "./../middleware/morgan";
-import { IEnvConfig } from "../config/env.type";
+import { IEnvConfig } from "../env/env.type";
 
 const appServer = (config: IEnvConfig) => {
+  /**
+   * @constant {express.Application}
+   */
+  const app: express.Application = express();
+  /**
+   * @constructs express.Application Middleware
+   */
+  Middleware.configure(app);
+
+  /**
+   * @constructs express.Application Error Handler
+   */
+  //Middleware.initErrorHandler(app);
   // APP PORT
-  app.set("port", config.server.port || 3333);
+  app.set("port", config.server.port);
 
   // ROUTES
   app.use(`${config.server.route}`, apiRouter());
 
-  // MODULES
+  /*   // MODULES
   app.use(cors(config.cors));
   app.use(express.json());
   app.use(helmet());
@@ -27,7 +31,7 @@ const appServer = (config: IEnvConfig) => {
   app.use("*", (req, res, next) => {
     const message = "Route not found !!";
     apiResponse.error(res, 404, { message });
-  });
+  }); */
   return app;
 };
 export default appServer;
